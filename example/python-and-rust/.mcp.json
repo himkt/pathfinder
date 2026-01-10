@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "pathfinder-python": {
+      "command": "/Users/himkt/work/himkt/pathfinder/target/release/pathfinder",
+      "args": [
+        "-w", ".",
+        "-e", "py",
+        "-e", "pyi",
+        "-s", "uv", "run", "pyright-langserver", "--", "--stdio"
+      ],
+      "env": {
+        "LOG_LEVEL": "debug"
+      }
+    },
+    "pathfinder-rust": {
+      "command": "/Users/himkt/work/himkt/pathfinder/target/release/pathfinder",
+      "args": [
+        "-w", ".",
+        "-e", "rs",
+        "-s", "rust-analyzer"
+      ],
+      "env": {
+        "LOG_LEVEL": "debug"
+      }
+    }
+  }
+}

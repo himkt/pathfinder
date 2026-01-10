@@ -1,0 +1,8 @@
+/target/
+**/*.swp
+.DS_Store
+/.idea/
+/.vscode/
+logs/
+
+example/*/target
