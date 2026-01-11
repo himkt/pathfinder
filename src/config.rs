@@ -22,12 +22,6 @@ pub struct ServerConfig {
 }
 
 impl Config {
-    pub fn from_file(path: &Path) -> Result<Self> {
-        let content = std::fs::read_to_string(path)
-            .with_context(|| format!("failed to read config file: {}", path.display()))?;
-        Self::from_json_str(&content)
-    }
-
     pub fn from_json_str(json: &str) -> Result<Self> {
         let config: Config = serde_json::from_str(json).context("failed to parse config JSON")?;
         config.validate()?;
