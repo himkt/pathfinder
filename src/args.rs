@@ -77,7 +77,17 @@ mod tests {
     #[test]
     fn python_multiple_extensions() {
         // Python and stub files use the same LSP server
-        let cli = parse_args(&["-e", "py", "-e", "pyi", "-s", "pyright-langserver", "--", "--stdio"]).unwrap();
+        let cli = parse_args(&[
+            "-e",
+            "py",
+            "-e",
+            "pyi",
+            "-s",
+            "pyright-langserver",
+            "--",
+            "--stdio",
+        ])
+        .unwrap();
         assert_eq!(cli.extension, vec!["py", "pyi"]);
         assert_eq!(cli.server, vec!["pyright-langserver", "--", "--stdio"]);
     }
@@ -103,7 +113,10 @@ mod tests {
         ])
         .unwrap();
         assert_eq!(cli.extension, vec!["ts"]);
-        assert_eq!(cli.server, vec!["typescript-language-server", "--", "--stdio"]);
+        assert_eq!(
+            cli.server,
+            vec!["typescript-language-server", "--", "--stdio"]
+        );
     }
 
     #[test]
@@ -121,7 +134,10 @@ mod tests {
         ])
         .unwrap();
         assert_eq!(cli.extension, vec!["py"]);
-        assert_eq!(cli.server, vec!["uv", "run", "pyright-langserver", "--", "--stdio"]);
+        assert_eq!(
+            cli.server,
+            vec!["uv", "run", "pyright-langserver", "--", "--stdio"]
+        );
     }
 
     #[test]
@@ -137,7 +153,10 @@ mod tests {
         ])
         .unwrap();
         assert_eq!(cli.extension, vec!["jsx"]);
-        assert_eq!(cli.server, vec!["typescript-language-server", "--", "--stdio"]);
+        assert_eq!(
+            cli.server,
+            vec!["typescript-language-server", "--", "--stdio"]
+        );
     }
 
     #[test]
@@ -151,5 +170,4 @@ mod tests {
         let result = parse_args(&["-e", "py"]);
         assert!(result.is_err());
     }
-
 }

@@ -21,7 +21,9 @@ async fn main() -> Result<()> {
     let server_specs = cli.to_server_specs()?;
 
     // Extract the single server spec (CLI always produces one spec)
-    let server_spec = server_specs.into_iter().next()
+    let server_spec = server_specs
+        .into_iter()
+        .next()
         .ok_or_else(|| anyhow!("no server specification provided"))?;
 
     let config = Config::from_server_spec(server_spec)?;
