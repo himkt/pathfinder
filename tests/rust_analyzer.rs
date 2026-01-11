@@ -56,8 +56,9 @@ fn definition_via_rust_analyzer() -> Result<()> {
         let mut lsp = LspBridge::new_with_command(
             &config.server.command[0],
             config.server.command[1..].to_vec(),
-            resolved_workspace
-        ).await?;
+            resolved_workspace,
+        )
+        .await?;
         lsp.initialize().await?;
 
         let mut documents = DocumentManager::new();
