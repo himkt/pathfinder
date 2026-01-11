@@ -31,11 +31,11 @@ jobs:
           targets: ${{ matrix.target }}
       - uses: Swatinem/rust-cache@v2
       - run: cargo build --release --target ${{ matrix.target }}
-      - run: mv target/${{ matrix.target }}/release/pathfinder target/${{ matrix.target }}/release/pathfinder-${{ matrix.target }}
+      - run: tar czf pathfinder-${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release pathfinder
       - uses: actions/upload-artifact@v4
         with:
-          name: pathfinder-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/pathfinder-${{ matrix.target }}
+          name: pathfinder-${{ matrix.target }}.tar.gz
+          path: pathfinder-${{ matrix.target }}.tar.gz
 
   release:
     needs: build
