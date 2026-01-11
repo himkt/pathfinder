@@ -1,6 +1,9 @@
 1. .venv is not located in the current directory
 2. Using ty for a language server (managed by `uvx`)
 
+> [!NOTE]
+> You can also use `--workspace` in .mcp.json to provide interpreter path to LSP server.
+
 ### Sample prompt
 
 ```
