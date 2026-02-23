@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "pathfinder": {
-      "command": "/Users/himkt/work/himkt/pathfinder/target/release/pathfinder",
+      "command": "pathfinder",
       "args": [
         "-w", ".",
         "-e", "rs",
