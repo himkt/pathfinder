@@ -14,7 +14,7 @@ tokio = { version = "1.40", features = ["rt-multi-thread", "macros", "process", 
 tokio-util = "0.7"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
-url = { version = "2" }
+url = { version = "2", features = ["serde"] }
 
 [dev-dependencies]
 tempfile = "3"
