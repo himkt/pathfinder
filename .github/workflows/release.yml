@@ -1,9 +1,9 @@
 name: cpu.release
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types:
+      - published
 
 env:
   CARGO_TERM_COLOR: always
@@ -11,42 +11,52 @@ env:
 jobs:
   build:
     name: ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            target: aarch64-apple-darwin
-          - os: macos-latest
-            target: x86_64-apple-darwin
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo build --release --target ${{ matrix.target }}
-      - run: tar czf pathfinder-${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release pathfinder
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pathfinder-${{ matrix.target }}.tar.gz
-          path: pathfinder-${{ matrix.target }}.tar.gz
-
-  release:
-    needs: build
-    runs-on: ubuntu-slim
+          - target: aarch64-apple-darwin
+            runner: macos-15
+            bottle_tag: arm64_sonoma
+          - target: x86_64-apple-darwin
+            runner: macos-15
+            bottle_tag: sonoma
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-24.04
+            bottle_tag: x86_64_linux
+          - target: aarch64-unknown-linux-musl
+            runner: ubuntu-24.04-arm
+            bottle_tag: arm64_linux
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          path: artifacts
-      - uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          files: artifacts/**/*
+          targets: ${{ matrix.target }}
+      - name: Resolve the release version
+        id: version
+        env:
+          tag_name: ${{ github.event.release.tag_name }}
+        run: echo "version=${tag_name#v}" >> "$GITHUB_OUTPUT"
+      - name: Build the release binary
+        run: cargo build --release --target ${{ matrix.target }}
+      - name: Package and upload the release archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          tag_name: ${{ github.event.release.tag_name }}
+          version: ${{ steps.version.outputs.version }}
+        run: |
+          tar -czf "pathfinder-v${version}-${{ matrix.target }}.tar.gz" -C "target/${{ matrix.target }}/release" pathfinder
+          gh release upload "$tag_name" "pathfinder-v${version}-${{ matrix.target }}.tar.gz" --clobber
+      - name: Package and upload the bottle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          tag_name: ${{ github.event.release.tag_name }}
+          version: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p "keg/pathfinder/${version}/bin"
+          cp "target/${{ matrix.target }}/release/pathfinder" "keg/pathfinder/${version}/bin/pathfinder"
+          tar -czf "pathfinder-${version}.${{ matrix.bottle_tag }}.bottle.tar.gz" -C keg pathfinder
+          gh release upload "$tag_name" "pathfinder-${version}.${{ matrix.bottle_tag }}.bottle.tar.gz" --clobber
