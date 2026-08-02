@@ -1,0 +1,22 @@
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+message = "chore: bump version {current_version} to {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "Cargo.toml"
+search   = """
+name = \"pathfinder\"
+version = \"{current_version}\""""
+replace  = """
+name = \"pathfinder\"
+version = \"{new_version}\""""
+
+[[tool.bumpversion.files]]
+filename = "Cargo.lock"
+search   = """
+name = \"pathfinder\"
+version = \"{current_version}\""""
+replace  = """
+name = \"pathfinder\"
+version = \"{new_version}\""""
