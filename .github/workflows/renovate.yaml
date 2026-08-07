@@ -13,7 +13,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           client-id: ${{ secrets.APP_CLIENT_ID }}
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-      - uses: renovatebot/github-action@3064367f740a1a91cca218698a63902689cce200 # v46.1.20
+      - uses: renovatebot/github-action@973d3e5a68e735a444e8c03432b66eedb343c302 # v46.2.0
         with:
           token: '${{ steps.github-app-token.outputs.token }}'
         env:
